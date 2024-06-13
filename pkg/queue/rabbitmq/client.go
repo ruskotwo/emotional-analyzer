@@ -46,7 +46,7 @@ func (c ClientImpl) Publish(queue string, body []byte) error {
 }
 
 func (c ClientImpl) CreateQueue(name string) amqp091.Queue {
-	q, err := c.getChannel().QueueDeclare(name, true, true, false, false, nil)
+	q, err := c.getChannel().QueueDeclare(name, true, false, false, false, nil)
 	if err != nil {
 		log.Fatalf("failed to declare a queue. Error: %s", err)
 	}

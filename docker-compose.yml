@@ -1,30 +1,55 @@
+x-python-tmlp:
+  &python-tmlp
+  image: ruskotwo/emotional-analyzer/python:latest
+  environment:
+    - TF_ENABLE_ONEDNN_OPTS=0
+  env_file:
+    - ./config/.env
+  networks:
+    - emotional-analyzer
+
 services:
   golang:
     image: ruskotwo/emotional-analyzer/golang:latest
+    restart: always
     env_file:
       - ./config/.env
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
     ports:
       - "3000:3000"
     networks:
       - emotional-analyzer
 
-  python:
-    image: ruskotwo/emotional-analyzer/python:latest
+  python-trainer:
+    <<: *python-tmlp
+    restart: on-failure
     entrypoint:
       - "python3"
       - "ai/learn.py"
-    environment:
-      - TF_ENABLE_ONEDNN_OPTS=0
-    env_file:
-      - ./config/.env
-    depends_on:
-      - rabbitmq
     volumes:
       - .:/var/app
-    networks:
-      - emotional-analyzer
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  python-workers:
+    <<: *python-tmlp
+    restart: always
+    entrypoint:
+      - "supervisord"
+      - "-c"
+      - "/etc/supervisor/supervisord.conf"
+      - "-n"
+    volumes:
+      - .:/var/app
+      - ./ai/supervisor:/etc/supervisor/conf.d
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      python-trainer:
+        condition: service_completed_successfully
 
   rabbitmq:
     image: rabbitmq:3.10.7-management
@@ -40,6 +65,11 @@ services:
       - "15672:15672"
     networks:
       - emotional-analyzer
+    healthcheck:
+      test: "rabbitmq-diagnostics -q ping"
+      interval: 1s
+      timeout: 1s
+      retries: 5
 
 networks:
   default:

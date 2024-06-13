@@ -23,7 +23,7 @@ func NewAnalysisHandler(
 }
 
 type BodyAddToAnalysis struct {
-	Messages []string
+	Messages map[string]string
 }
 
 func (h AnalysisHandler) handleAddToAnalysis(w http.ResponseWriter, r *http.Request) {
