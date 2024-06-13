@@ -1,0 +1,4 @@
+.idea
+ai/.idea
+docker/rabbitmq/*
+!docker/rabbitmq/.gitkeep

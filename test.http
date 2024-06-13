@@ -1,0 +1,9 @@
+POST http://localhost:3000/add
+Content-Type: application/json
+
+{
+  "messages": [
+    "alo",
+    "nushotam"
+  ]
+}
