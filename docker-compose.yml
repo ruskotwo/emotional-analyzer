@@ -17,7 +17,10 @@ services:
     depends_on:
       rabbitmq:
         condition: service_healthy
+      mysql:
+        condition: service_healthy
     ports:
+      - "40001:40001"
       - "3000:3000"
     networks:
       - emotional-analyzer
@@ -68,7 +71,27 @@ services:
     healthcheck:
       test: "rabbitmq-diagnostics -q ping"
       interval: 1s
-      timeout: 1s
+      timeout: 3s
+      retries: 5
+
+  mysql:
+    image: mysql:8.0.35
+    restart: always
+    hostname: mysql
+#    volumes:
+#      - ./docker/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=golang
+      - MYSQL_DATABASE=ea
+      - MYSQL_USER=golang
+      - MYSQL_PASSWORD=golang
+    ports:
+      - "13306:3306"
+    networks:
+      - emotional-analyzer
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 3s
       retries: 5
 
 networks:

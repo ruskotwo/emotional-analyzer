@@ -6,14 +6,10 @@ import (
 	"strconv"
 )
 
-type Queue struct {
-	RabbitMQ           string
-	NameToAnalysis     string
-	NameAnalysisResult string
-}
-
 type Config struct {
 	HttpPort int
+	MysqlDSN string
+	OAuth2   OAuth2
 	Queue    Queue
 }
 
@@ -29,10 +25,27 @@ func NewConfig() *Config {
 
 	return &Config{
 		HttpPort: port,
+		MysqlDSN: os.Getenv("MYSQL_DSN"),
+		OAuth2: OAuth2{
+			Client: OAuth2Client{
+				ID:     os.Getenv("OAUTH2_CLIENT_ID"),
+				Secret: os.Getenv("OAUTH2_CLIENT_SECRET"),
+				Domain: os.Getenv("OAUTH2_CLIENT_DOMAIN"),
+			},
+		},
 		Queue: Queue{
-			RabbitMQ:           os.Getenv("RABBIT_MQ_DSN"),
-			NameToAnalysis:     os.Getenv("QUEUE_TO_ANALYSIS"),
-			NameAnalysisResult: os.Getenv("QUEUE_ANALYSIS_RESULT"),
+			Clients: QueueClients{
+				RabbitMQ: os.Getenv("RABBIT_MQ_DSN"),
+			},
+			List: QueueList{
+				ToAnalysis: QueueListItem{
+					Name: os.Getenv("QUEUE_TO_ANALYSIS"),
+				},
+				AnalysisResult: QueueListItem{
+					Name:         os.Getenv("QUEUE_ANALYSIS_RESULT"),
+					WorkersCount: 1,
+				},
+			},
 		},
 	}
 }

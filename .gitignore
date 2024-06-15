@@ -1,6 +1,9 @@
 .idea
 ai/.idea
+
 ai/models/*
 !ai/models/.gitkeep
 docker/rabbitmq/*
 !docker/rabbitmq/.gitkeep
+docker/mysql/*
+!docker/mysql/.gitkeep

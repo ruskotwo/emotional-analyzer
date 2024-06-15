@@ -14,6 +14,7 @@ func InitService() *Service {
 			config.NewConfig,
 			httpSet,
 			queueSet,
+			gormSet,
 			NewService,
 		),
 	)

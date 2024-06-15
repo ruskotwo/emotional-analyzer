@@ -25,10 +25,10 @@ func NewClient(url string) *ClientImpl {
 	}
 }
 
-func (c ClientImpl) Publish(queue string, body []byte) error {
+func (c ClientImpl) Publish(key string, body []byte) error {
 	err := c.getChannel().Publish(
 		amqp091.DefaultExchange,
-		queue,
+		key,
 		false,
 		false,
 		amqp091.Publishing{
@@ -40,18 +40,39 @@ func (c ClientImpl) Publish(queue string, body []byte) error {
 		return fmt.Errorf("failed to publish a message. Error: %s", err)
 	}
 
-	log.Printf(" [x] Sent to %s: %s\n", queue, body)
+	log.Printf("Sent to %s: %s\n", key, body)
 
 	return err
 }
 
-func (c ClientImpl) CreateQueue(name string) amqp091.Queue {
-	q, err := c.getChannel().QueueDeclare(name, true, false, false, false, nil)
+func (c ClientImpl) CreateQueue(key string) amqp091.Queue {
+	q, err := c.getChannel().QueueDeclare(key, true, false, false, false, nil)
 	if err != nil {
 		log.Fatalf("failed to declare a queue. Error: %s", err)
 	}
 
 	return q
+}
+
+func (c ClientImpl) Consume(key string, callback queue.CallbackFunc) {
+	msgs, err := c.getChannel().Consume(
+		key,
+		"",
+		false,
+		false,
+		false,
+		false,
+		nil,
+	)
+	if err != nil {
+		log.Fatalf("failed to consume a queue. Error: %s", err)
+	}
+
+	go func() {
+		for d := range msgs {
+			callback(d)
+		}
+	}()
 }
 
 func (c ClientImpl) getChannel() *amqp091.Channel {

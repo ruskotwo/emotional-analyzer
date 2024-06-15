@@ -1,0 +1,11 @@
+POST http://localhost:3000/addToAnalysis
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "messages": {
+    "123123": "Alo",
+    "1232": "Nu kak tam?"
+  },
+  "secret": "asd"
+}

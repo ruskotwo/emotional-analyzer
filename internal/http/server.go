@@ -3,6 +3,7 @@ package http
 import (
 	"fmt"
 	"github.com/ruskotwo/emotional-analyzer/internal/config"
+	"github.com/ruskotwo/emotional-analyzer/internal/http/handlers"
 	"log"
 	"net/http"
 )
@@ -13,9 +14,14 @@ type Server struct {
 
 func NewServer(
 	cfg *config.Config,
-	analysisHandler *AnalysisHandler,
+	analysisHandler *handlers.AnalysisHandler,
+	clientsHandler *handlers.ClientsHandler,
+	oAuthHandler *handlers.OAuthHandler,
 ) *Server {
-	http.HandleFunc("/add", analysisHandler.handleAddToAnalysis)
+	http.HandleFunc("/register", clientsHandler.HandleRegister)
+	http.HandleFunc("/oauth/token", oAuthHandler.HandleToken)
+
+	http.HandleFunc("/addToAnalysis", analysisHandler.HandleAddToAnalysis)
 
 	return &Server{
 		port: cfg.HttpPort,

@@ -1,0 +1,14 @@
+POST http://localhost:3000/oauth/token
+Content-Type: application/json
+
+{
+  "grant_type": "refresh_token",
+  "refresh_token": "{{refresh_token}}"
+}
+
+> {%
+    if (response.status === 200) {
+        client.global.set("access_token", response.body.access_token);
+        client.global.set("refresh_token", response.body.refresh_token);
+    }
+%}

@@ -1,9 +1,0 @@
-POST http://localhost:3000/add
-Content-Type: application/json
-
-{
-  "messages": {
-    "123123": "Alo",
-    "1232": "Nu kak tam?"
-  }
-}

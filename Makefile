@@ -7,6 +7,10 @@ generate:
 build_golang:
 	docker build -t ${container_golang} -f ./docker/golang.Dockerfile .
 
+build_golang_dev: generate
+	docker build -t ${container_golang} -f ./docker/golang.dev.Dockerfile .
+	docker-compose up -d
+
 build_python:
 	docker build -t ${container_python} -f ./docker/python.Dockerfile .
 

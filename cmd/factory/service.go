@@ -2,16 +2,20 @@ package factory
 
 import (
 	"github.com/ruskotwo/emotional-analyzer/internal/http"
-	"github.com/ruskotwo/emotional-analyzer/pkg/queue"
+	"github.com/ruskotwo/emotional-analyzer/internal/queue"
 )
 
 type Service struct {
-	Server *http.Server
+	WorkersManager *queue.WorkersManager
+	Server         *http.Server
 }
 
 func NewService(
-	_ queue.Client,
+	workersManager *queue.WorkersManager,
 	server *http.Server,
 ) *Service {
-	return &Service{server}
+	return &Service{
+		workersManager,
+		server,
+	}
 }

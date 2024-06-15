@@ -8,8 +8,11 @@ package factory
 
 import (
 	"github.com/ruskotwo/emotional-analyzer/internal/config"
+	"github.com/ruskotwo/emotional-analyzer/internal/gorm/clients"
 	"github.com/ruskotwo/emotional-analyzer/internal/http"
+	"github.com/ruskotwo/emotional-analyzer/internal/http/handlers"
 	"github.com/ruskotwo/emotional-analyzer/internal/queue"
+	"github.com/ruskotwo/emotional-analyzer/internal/queue/workers"
 )
 
 // Injectors from wire.go:
@@ -17,9 +20,15 @@ import (
 func InitService() *Service {
 	configConfig := config.NewConfig()
 	clientImpl := provideRabbitMQ(configConfig)
-	names := queue.NewNames(configConfig)
-	analysisHandler := http.NewAnalysisHandler(clientImpl, names)
-	server := http.NewServer(configConfig, analysisHandler)
-	service := NewService(clientImpl, server)
+	db := provideGormDB(configConfig)
+	repository := clients.NewRepository(db)
+	sendAnalysisResultWorker := workers.NewSendAnalysisResultWorker(repository)
+	workersManager := queue.NewWorkersManager(clientImpl, configConfig, sendAnalysisResultWorker)
+	server := provideOAuth2(configConfig)
+	analysisHandler := handlers.NewAnalysisHandler(clientImpl, configConfig, server)
+	clientsHandler := handlers.NewClientsHandler(configConfig, server, repository)
+	oAuthHandler := handlers.NewOAuthHandler(configConfig, server)
+	httpServer := http.NewServer(configConfig, analysisHandler, clientsHandler, oAuthHandler)
+	service := NewService(workersManager, httpServer)
 	return service
 }

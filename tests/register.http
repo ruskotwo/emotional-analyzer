@@ -1,0 +1,13 @@
+POST http://localhost:3000/register
+Content-Type: application/json
+
+{
+  "callback_url": "https://webhook.site/8e2f4a12-bb5d-4ef0-b38d-f727b87ab33b"
+}
+
+> {%
+    if (response.status === 200) {
+        client.global.set("access_token", response.body.access_token);
+        client.global.set("refresh_token", response.body.refresh_token);
+    }
+%}
