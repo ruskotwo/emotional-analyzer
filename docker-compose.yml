@@ -1,3 +1,5 @@
+version: "3.9"
+
 x-python-tmlp:
   &python-tmlp
   image: ruskotwo/emotional-analyzer/python:latest
