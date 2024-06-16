@@ -21,7 +21,7 @@ func NewServer(
 	http.HandleFunc("/register", clientsHandler.HandleRegister)
 	http.HandleFunc("/oauth/token", oAuthHandler.HandleToken)
 
-	http.HandleFunc("/addToAnalysis", analysisHandler.HandleAddToAnalysis)
+	http.HandleFunc("/analyze/task", analysisHandler.HandleAddToAnalysis)
 
 	return &Server{
 		port: cfg.HttpPort,

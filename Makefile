@@ -16,7 +16,7 @@ dev_golang: generate
 build_python:
 	docker build -t ${container_python} -f ./docker/python.Dockerfile .
 
-all: generate build_golang
+all: generate build_golang build_python
 	docker-compose --profile app up -d
 
 tests_telegram_bot:

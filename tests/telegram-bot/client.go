@@ -11,7 +11,7 @@ import (
 const EaHost = "http://golang:3000"
 const EaRegisterUrl = EaHost + "/register"
 const EaRefreshUrl = EaHost + "/oauth/token"
-const EaAddToAnalysisUrl = EaHost + "/addToAnalysis"
+const EaAddToAnalysisUrl = EaHost + "/analyze/task"
 
 const Secret = "secret"
 
