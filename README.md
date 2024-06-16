@@ -8,9 +8,9 @@
 make all
 ```
 
-Для тестирования подготовлены http запросы в `/tests/http/`.
+Для тестирования подготовлены http запросы в [tests/http](tests/http).
 
-А так же предоставлен рабочий пример бота для телеграм в `/tests/telegram/`
+А так же предоставлен рабочий пример бота для телеграм в [tests/telegram-bot](tests/telegram-bot) 
 ```shell
 vi tests/telegram/.env # Put your telegram token
 ```
@@ -20,7 +20,7 @@ make tests_telegram_bot
 
 ## How use this
 
-**POST /register**
+### [POST /register](tests/http/register.http)
 
 Эндпоинт авторизации, необходимо сообщить сервису ссылку, на которую будет возвращаться результат.\
 В ответ сразу будет возвращена пара токенов, готовых к работе.
@@ -39,9 +39,9 @@ make tests_telegram_bot
 }
 ```
 
-**POST /oauth/token**
+### [POST /oauth/token](tests/http/token_refresh.http)
 
-Жизнь access токена ограничена двумя часами, жизнь refresh токена ограничена двумя днями.\
+Жизнь access токена ограничена двумя часами, жизнь refresh токена ограничена двумя днями: [to code](cmd/factory/http.go#L44-L48).\
 Для получения новой пары токенов необходимо отправить актуальный refresh токен и получить в ответ новую пару токенов.
 
 ```json
@@ -59,7 +59,7 @@ make tests_telegram_bot
 }
 ```
 
-**POST /analyze/task**
+### [POST /analyze/task](tests/http/addToAnalysis.http)
 
 Основной эндпоинт, предназначенный непосредственно для постановки задачи сервису.
 
@@ -84,7 +84,7 @@ make tests_telegram_bot
 }
 ```
 
-**Result hook**
+### Result hook
 
 Сервис возвращает результат по http на ссылку, указанную при регистрации.
 
