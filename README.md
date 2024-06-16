@@ -12,9 +12,8 @@ make all
 
 А так же предоставлен рабочий пример бота для телеграм в [tests/telegram-bot](tests/telegram-bot) 
 ```shell
-vi tests/telegram/.env # Put your telegram token
-```
-```shell
+echo "<telegram_token>" > tests/telegram/.env # Put your telegram token
+
 make tests_telegram_bot
 ```
 
