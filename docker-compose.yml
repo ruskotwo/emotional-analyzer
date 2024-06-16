@@ -5,6 +5,7 @@ x-python-tmlp:
     - TF_ENABLE_ONEDNN_OPTS=0
   env_file:
     - ./config/.env
+  profiles: [app]
   networks:
     - emotional-analyzer
 
@@ -22,6 +23,7 @@ services:
     ports:
       - "40001:40001"
       - "3000:3000"
+    profiles: [app]
     networks:
       - emotional-analyzer
 
@@ -66,6 +68,7 @@ services:
       - ./docker/rabbitmq:/var/lib/rabbitmq
     ports:
       - "15672:15672"
+    profiles: [app]
     networks:
       - emotional-analyzer
     healthcheck:
@@ -87,12 +90,23 @@ services:
       - MYSQL_PASSWORD=golang
     ports:
       - "13306:3306"
+    profiles: [app]
     networks:
       - emotional-analyzer
     healthcheck:
       test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
       timeout: 3s
       retries: 5
+
+  telegram-bot:
+    image: ruskotwo/emotional-analyzer/telegram-bot:latest
+    env_file:
+      - ./tests/telegram-bot/.env
+    ports:
+      - "4000:4000"
+    profiles: [tests]
+    networks:
+      - emotional-analyzer
 
 networks:
   default:

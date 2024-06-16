@@ -15,6 +15,7 @@ MAX_FEATURES = 5_000
 MAX_SEQ_LEN = 256
 EMBEDDING_DIM = 128
 RANDOM_STATE = 50
+EPOCHS=300
 
 
 def plot_history(history):
@@ -44,7 +45,7 @@ class Trainer:
         df.sentiment = df.sentiment.cat.remove_unused_categories()
         df.sentiment = df.sentiment.cat.reorder_categories(SENTIMENTS)
 
-        self.train_df, self.test_df = train_test_split(df, test_size=0.2, random_state=RANDOM_STATE)
+        self.train_df, self.test_df = train_test_split(df, test_size=0.3, random_state=RANDOM_STATE)
 
         print(f'{len(self.train_df)=}, {len(self.test_df)=}')
 
@@ -91,7 +92,7 @@ class Trainer:
             y=y_train,
             validation_data=(x_test, y_test),
             batch_size=256,
-            epochs=3,
+            epochs=EPOCHS,
             verbose=1,
             class_weight=self.class_weight,
             callbacks=[keras.callbacks.EarlyStopping(patience=3)],

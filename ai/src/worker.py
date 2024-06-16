@@ -19,6 +19,7 @@ class Worker:
         self.channel.start_consuming()
 
     def handle(self, channel, method, properties, body):
+        print('Got tack')
         data = {}
 
         try:
@@ -35,7 +36,8 @@ class Worker:
         messages = data.get('messages')
         messages2analyze =  pd.Series(messages.values())
 
-        preds = self.model.predict(messages2analyze).argmax(1).squeeze()
+        print('Analyze...')
+        preds = self.model.predict(messages2analyze).argmax(1)
 
         index = 0
         for key in messages.keys():
@@ -51,4 +53,5 @@ class Worker:
             body=json.dumps(data)
         )
 
+        print('Put to queue')
         channel.basic_ack(delivery_tag=method.delivery_tag)

@@ -4,8 +4,11 @@ Authorization: Bearer {{access_token}}
 
 {
   "messages": {
-    "123123": "Alo",
-    "1232": "Nu kak tam?"
+    "1": "How are you?",
+    "2": "I feel sad",
+    "3": "But you can cheer up!",
+    "4": "No Im not sure",
+    "5": "Ok kill yourself"
   },
-  "secret": "asd"
+  "secret": "secret"
 }
