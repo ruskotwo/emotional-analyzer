@@ -4,6 +4,8 @@ FROM golang:1.22-alpine3.20 as builder
 ADD . /go/src/github.com/ruskotwo/emotional-analyzer
 WORKDIR /go/src/github.com/ruskotwo/emotional-analyzer
 
+RUN cd cmd/factory && wire ; cd ../..
+
 #RUN go mod download
 RUN go build -o /go/bin/emotional-analyzer ./cmd/main.go
 

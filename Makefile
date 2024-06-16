@@ -9,14 +9,14 @@ generate:
 build_golang:
 	docker build -t ${container_golang} -f ./docker/golang.Dockerfile .
 
-dev_golang: generate
+dev_golang:
 	docker build -t ${container_golang} -f ./docker/golang.dev.Dockerfile .
 	docker-compose up -d --profile app
 
 build_python:
 	docker build -t ${container_python} -f ./docker/python.Dockerfile .
 
-all: generate build_golang build_python
+all: build_golang build_python
 	docker-compose --profile app up -d
 
 tests_telegram_bot:
